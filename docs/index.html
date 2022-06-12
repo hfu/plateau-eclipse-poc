@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>plateau-lod2-mvt</title>
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
+  <script src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+</head>
+
+<body>
+  <div id="map" style="position:absolute;top:0;left:0;bottom:0;right:0;"></div>
+  <script>
+    const style = {
+      "version": 8,
+      "glyphs": "https://maps.gsi.go.jp/xyz/noto-jp/{fontstack}/{range}.pbf",
+      "sources": {
+        "pale": {
+          "type": "raster",
+          "tiles": [
+            "https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png"
+          ],
+          "minzoom": 5,
+          "maxzoom": 18,
+          "tileSize": 256,
+          "attribution": "<a href='http://maps.gsi.go.jp/development/ichiran.html'>地理院タイル</a>"
+        },
+        "bldg": {
+          "type": "vector",
+          "tiles": [
+            "https://x.optgeo.org/plateau-eclipse-poc/{z}-{x}-{y}.pbf"
+          ],
+          "minzoom": 10,
+          "maxzoom": 16,
+          "attribution": "<a href='https://github.com/indigo-lab/plateau-lod2-mvt'>plateau-lod2-mvt by indigo-lab</a> (<a href='https://www.mlit.go.jp/plateau/'>国土交通省 Project PLATEAU</a> のデータを加工して作成)"
+        }
+      },
+      "layers": [{
+        "id": "pale",
+        "type": "raster",
+        "source": "pale",
+        "minzoom": 5,
+        "maxzoom": 20
+      }, {
+        "id": "fill-extrusion-bldg",
+        "type": "fill-extrusion",
+        "source": "bldg",
+        "source-layer": "bldg",
+        "minzoom": 10,
+        "maxzoom": 20,
+        "filter": ["has", "z"],
+        "paint": {
+          "fill-extrusion-color": [
+            "interpolate-lab",
+            ["linear"],
+            ["%", ["round", ["*", 10, ["get", "z"]]], 10],
+            0, "#d95d2a",
+            1, "#d95d2a",
+            2, "#f8df4a",
+            3, "#f8df4a",
+            4, "#1d508e",
+            5, "#1d508e",
+            6, "#3c782e",
+            7, "#3c782e",
+            8, "#845c40",
+            9, "#726f62"
+          ],
+          "fill-extrusion-height": ["*", ["get", "z"], 1]
+        }
+      }]
+    };
+
+    new maplibregl.Map({
+      "container": "map",
+      "center": [139.693909, 35.686302],
+      "hash": true,
+      "zoom": 16,
+      "pitch": 60,
+      "bearing": 22,
+      "style": style
+    });
+  </script>
+</body>
+
+</html>

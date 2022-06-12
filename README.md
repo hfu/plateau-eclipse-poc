@@ -8,3 +8,7 @@ And thanks!
 
 # License
 My parts are CC0. 
+
+# Social preview image source
+https://www.metmuseum.org/art/collection/search/334340
+
